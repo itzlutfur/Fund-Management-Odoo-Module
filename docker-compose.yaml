@@ -1,0 +1,33 @@
+services:
+  odoo:
+    image: odoo:17.0
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    environment:
+      - HOST=db
+      - USER=${POSTGRES_USER}
+      - PASSWORD=${POSTGRES_PASSWORD}
+    # command: ["odoo", "-d", "odoo", "-i", "base", "--stop-after-init"] #first time
+    command: ["odoo", "-d", "odoo"] #After First Run 
+    # command: ["odoo", "-d", "odoo","-u", "nn_fund_management", "--without-demo-all"]
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+volumes:
+  odoo-web-data:
+  odoo-db-data:
+
+networks:
+  odoo-network:
