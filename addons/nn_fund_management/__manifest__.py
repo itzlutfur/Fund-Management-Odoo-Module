@@ -22,24 +22,7 @@
     """,
     # data files always loaded at installation
     'data': [
-        # Security
-        # 'security/groups.xml',
-        # 'security/ir_model_access.csv',
-        # 'security/record_rules.xml',
-        # Views
-        # 'views/menus.xml',
-        # 'views/fund_account_view.xml',
-        # 'views/incoming_fund_view.xml',
-        # 'views/expense_head_view.xml',
-        # 'views/fund_balance_view.xml',
-        # 'views/fund_allocation_view.xml',
-        # 'views/fund_requisition_view.xml',
-        # 'views/fund_bill_view.xml',
-        # 'views/fund_transfer_view.xml',
-        # 'views/approval_history_view.xml',
-        # 'views/fund_approver_config_view.xml',
-        # Data
-        # 'data/fund_groups.xml',
+        
     ],
     
     'installable': True,
