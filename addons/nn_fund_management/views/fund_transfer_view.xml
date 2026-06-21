@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Fund Transfer Tree View -->
+        <record id="view_nn_fund_transfer_tree" model="ir.ui.view">
+            <field name="name">nn.fund_transfer.tree</field>
+            <field name="model">nn.fund_transfer</field>
+            <field name="arch" type="xml">
+                <tree string="Fund Transfers">
+                    <field name="name"/>
+                    <field name="amount" sum="Total"/>
+                    <field name="source_type"/>
+                    <field name="destination_type"/>
+                    <field name="current_approval_level"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Fund Transfer Form View -->
+        <record id="view_nn_fund_transfer_form" model="ir.ui.view">
+            <field name="name">nn.fund_transfer.form</field>
+            <field name="model">nn.fund_transfer</field>
+            <field name="arch" type="xml">
+                <form string="Fund Transfer">
+                    <header>
+                        <button name="action_submit" string="Submit" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_approve_gm" string="Approve (GM)" type="object" class="btn-success" invisible="state != 'submitted'"/>
+                        <button name="action_approve_md" string="Approve (MD)" type="object" class="btn-success" invisible="state != 'gm_approved'"/>
+                        <button name="action_reject" string="Reject" type="object" invisible="state not in ['submitted', 'gm_approved', 'md_approved']"/>
+                        <button name="action_cancel" string="Cancel" type="object" invisible="state not in ['draft', 'submitted', 'gm_approved', 'md_approved']"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,gm_approved,md_approved,approved,rejected,cancelled"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="amount" required="1" readonly="state != 'draft'"/>
+                                <field name="request_date"/>
+                            </group>
+                            <group>
+                                <field name="requested_by" readonly="1"/>
+                                <field name="current_approval_level" readonly="1"/>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Source">
+                                <group>
+                                    <field name="source_type" required="1" readonly="state != 'draft'"/>
+                                    <field name="source_project_id" invisible="source_type != 'project'" required="source_type == 'project'" readonly="state != 'draft'"/>
+                                    <field name="source_expense_head_id" invisible="source_type != 'expense_head'" required="source_type == 'expense_head'" readonly="state != 'draft'"/>
+                                </group>
+                            </page>
+                            <page string="Destination">
+                                <group>
+                                    <field name="destination_type" required="1" readonly="state != 'draft'"/>
+                                    <field name="destination_project_id" invisible="destination_type != 'project'" required="destination_type == 'project'" readonly="state != 'draft'"/>
+                                    <field name="destination_expense_head_id" invisible="destination_type != 'expense_head'" required="destination_type == 'expense_head'" readonly="state != 'draft'"/>
+                                </group>
+                            </page>
+                            <page string="Details">
+                                <group>
+                                    <field name="reason" nolabel="1" readonly="state != 'draft'"/>
+                                </group>
+                            </page>
+                            <page string="Approvals">
+                                <field name="approval_history_ids" readonly="1">
+                                    <tree>
+                                        <field name="approver_id"/>
+                                        <field name="approval_level"/>
+                                        <field name="decision"/>
+                                        <field name="decision_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Fund Transfer Search View -->
+        <record id="view_nn_fund_transfer_search" model="ir.ui.view">
+            <field name="name">nn.fund_transfer.search</field>
+            <field name="model">nn.fund_transfer</field>
+            <field name="arch" type="xml">
+                <search string="Search Fund Transfers">
+                    <field name="name"/>
+                    <field name="source_project_id"/>
+                    <field name="source_expense_head_id"/>
+                    <field name="destination_project_id"/>
+                    <field name="destination_expense_head_id"/>
+                    <separator/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Pending Approval" name="pending" domain="[('state','in',['submitted','gm_approved','md_approved'])]"/>
+                    <filter string="Approved" name="approved" domain="[('state','=','approved')]"/>
+                    <filter string="Rejected" name="rejected" domain="[('state','=','rejected')]"/>
+                    <separator/>
+                    <filter string="Project to Project" name="p2p" domain="[('source_type','=','project'),('destination_type','=','project')]"/>
+                    <filter string="Expense to Expense" name="e2e" domain="[('source_type','=','expense_head'),('destination_type','=','expense_head')]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Fund Transfer Action -->
+        <record id="action_nn_fund_transfer" model="ir.actions.act_window">
+            <field name="name">Fund Transfers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">nn.fund_transfer</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

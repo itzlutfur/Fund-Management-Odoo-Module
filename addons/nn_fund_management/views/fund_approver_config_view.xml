@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Fund Approver Config Tree View -->
+        <record id="view_nn_fund_approver_config_tree" model="ir.ui.view">
+            <field name="name">nn.fund_approver_config.tree</field>
+            <field name="model">nn.fund_approver_config</field>
+            <field name="arch" type="xml">
+                <tree string="Fund Approver Configuration">
+                    <field name="company_id"/>
+                    <field name="gm_user_id"/>
+                    <field name="gm_group_id"/>
+                    <field name="md_user_id"/>
+                    <field name="md_group_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Fund Approver Config Form View -->
+        <record id="view_nn_fund_approver_config_form" model="ir.ui.view">
+            <field name="name">nn.fund_approver_config.form</field>
+            <field name="model">nn.fund_approver_config</field>
+            <field name="arch" type="xml">
+                <form string="Fund Approver Configuration">
+                    <sheet>
+                        <group>
+                            <field name="company_id" required="1"/>
+                            <field name="can_self_approve"/>
+                        </group>
+                        <notebook>
+                            <page string="GM Approvers">
+                                <group>
+                                    <group>
+                                        <field name="gm_user_id" string="Individual GM User"/>
+                                    </group>
+                                    <group>
+                                        <field name="gm_group_id" string="GM Group"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="MD Approvers">
+                                <group>
+                                    <group>
+                                        <field name="md_user_id" string="Individual MD User"/>
+                                    </group>
+                                    <group>
+                                        <field name="md_group_id" string="MD Group"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Fund Approver Config Search View -->
+        <record id="view_nn_fund_approver_config_search" model="ir.ui.view">
+            <field name="name">nn.fund_approver_config.search</field>
+            <field name="model">nn.fund_approver_config</field>
+            <field name="arch" type="xml">
+                <search string="Search Fund Approver Configuration">
+                    <field name="company_id"/>
+                    <field name="gm_user_id"/>
+                    <field name="md_user_id"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Fund Approver Config Action -->
+        <record id="action_nn_fund_approver_config" model="ir.actions.act_window">
+            <field name="name">Fund Approver Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">nn.fund_approver_config</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Fund Balance Tree View -->
+        <record id="view_nn_fund_balance_tree" model="ir.ui.view">
+            <field name="name">nn.fund_balance.tree</field>
+            <field name="model">nn.fund_balance</field>
+            <field name="arch" type="xml">
+                <tree string="Fund Balances">
+                    <field name="content_type"/>
+                    <field name="project_id"/>
+                    <field name="expense_head_id"/>
+                    <field name="total_allocated" sum="Total"/>
+                    <field name="available_balance" sum="Available"/>
+                    <field name="total_spent" sum="Spent"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Fund Balance Form View -->
+        <record id="view_nn_fund_balance_form" model="ir.ui.view">
+            <field name="name">nn.fund_balance.form</field>
+            <field name="model">nn.fund_balance</field>
+            <field name="arch" type="xml">
+                <form string="Fund Balance">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="content_type"/>
+                                <field name="project_id" invisible="content_type != 'project'"/>
+                                <field name="expense_head_id" invisible="content_type != 'expense_head'"/>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Balance Details">
+                                <group>
+                                    <group>
+                                        <field name="total_allocated" readonly="1"/>
+                                        <field name="approved_unspent" readonly="1"/>
+                                        <field name="total_spent" readonly="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="requisition_hold" readonly="1"/>
+                                        <field name="transfer_hold" readonly="1"/>
+                                        <field name="available_balance" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Transfers">
+                                <group>
+                                    <group>
+                                        <field name="incoming_transfers" readonly="1"/>
+                                        <field name="outgoing_transfers" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Fund Balance Search View -->
+        <record id="view_nn_fund_balance_search" model="ir.ui.view">
+            <field name="name">nn.fund_balance.search</field>
+            <field name="model">nn.fund_balance</field>
+            <field name="arch" type="xml">
+                <search string="Search Fund Balances">
+                    <field name="project_id"/>
+                    <field name="expense_head_id"/>
+                    <field name="company_id"/>
+                    <separator/>
+                    <filter string="Projects" name="projects" domain="[('content_type','=','project')]"/>
+                    <filter string="Expense Heads" name="expenses" domain="[('content_type','=','expense_head')]"/>
+                    <separator/>
+                    <filter string="Has Available Balance" name="has_available" domain="[('available_balance','>',0)]"/>
+                    <filter string="No Available Balance" name="no_available" domain="[('available_balance','=',0)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Fund Balance Action -->
+        <record id="action_nn_fund_balance" model="ir.actions.act_window">
+            <field name="name">Fund Balances</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">nn.fund_balance</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

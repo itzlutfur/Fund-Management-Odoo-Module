@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Fund Account Tree View -->
+        <record id="view_nn_fund_account_tree" model="ir.ui.view">
+            <field name="name">nn.fund_account.tree</field>
+            <field name="model">nn.fund_account</field>
+            <field name="arch" type="xml">
+                <tree string="Fund Accounts">
+                    <field name="name"/>
+                    <field name="account_type"/>
+                    <field name="total_received" sum="Total Received"/>
+                    <field name="on_hold_amount" sum="On Hold"/>
+                    <field name="assigned_amount" sum="Assigned"/>
+                    <field name="unassigned_balance" sum="Unassigned"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Fund Account Form View -->
+        <record id="view_nn_fund_account_form" model="ir.ui.view">
+            <field name="name">nn.fund_account.form</field>
+            <field name="model">nn.fund_account</field>
+            <field name="arch" type="xml">
+                <form string="Fund Account">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="account_type"/>
+                                <field name="company_id"/>
+                            </group>
+                            <group>
+                                <field name="bank_name"/>
+                                <field name="account_number"/>
+                                <field name="currency_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Balance Summary">
+                                <group>
+                                    <group>
+                                        <field name="total_received" readonly="1"/>
+                                        <field name="on_hold_amount" readonly="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="assigned_amount" readonly="1"/>
+                                        <field name="unassigned_balance" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Incoming Funds">
+                                <field name="incoming_fund_ids" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="date"/>
+                                        <field name="amount"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Allocations">
+                                <field name="allocation_ids" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="amount"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Fund Account Search View -->
+        <record id="view_nn_fund_account_search" model="ir.ui.view">
+            <field name="name">nn.fund_account.search</field>
+            <field name="model">nn.fund_account</field>
+            <field name="arch" type="xml">
+                <search string="Search Fund Accounts">
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <filter string="Bank" name="bank" domain="[('account_type','=','bank')]"/>
+                    <filter string="Cash" name="cash" domain="[('account_type','=','cash')]"/>
+                    <filter string="Other" name="other" domain="[('account_type','=','other')]"/>
+                    <separator/>
+                    <filter string="Active" name="active" domain="[('active','=',True)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Fund Account Action -->
+        <record id="action_nn_fund_account" model="ir.actions.act_window">
+            <field name="name">Fund Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">nn.fund_account</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

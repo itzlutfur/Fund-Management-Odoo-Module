@@ -10,6 +10,7 @@ class NNFundApprovalRule(models.Model):
 
     name = fields.Char(string='Rule Name', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
     
     request_type = fields.Selection(
         [('allocation', 'Allocation'), ('requisition', 'Requisition'), ('transfer', 'Transfer')],
@@ -17,10 +18,10 @@ class NNFundApprovalRule(models.Model):
         required=True
     )
     
-    min_amount = fields.Monetary(string='Minimum Amount', default=0)
-    max_amount = fields.Monetary(string='Maximum Amount')  # Leave blank for unlimited
+    min_amount = fields.Monetary(string='Minimum Amount', default=0, currency_field='currency_id')
+    max_amount = fields.Monetary(string='Maximum Amount', currency_field='currency_id')  # Leave blank for unlimited
     
-    project_category_id = fields.Many2one('project.category', string='Project Category')
+    project_category_id = fields.Many2one('project.project', string='Project (Optional)')
     
     approval_sequence = fields.Selection(
         [('gm_only', 'GM Only'), ('gm_and_md', 'GM and MD'), ('gm_finance_md', 'GM, Finance, and MD'), ('custom', 'Custom')],

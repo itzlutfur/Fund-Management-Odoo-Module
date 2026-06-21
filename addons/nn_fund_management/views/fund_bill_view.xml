@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Fund Bill Tree View -->
+        <record id="view_nn_fund_bill_tree" model="ir.ui.view">
+            <field name="name">nn.fund_bill.tree</field>
+            <field name="model">nn.fund_bill</field>
+            <field name="arch" type="xml">
+                <tree string="Fund Bills">
+                    <field name="name"/>
+                    <field name="bill_date"/>
+                    <field name="requisition_id"/>
+                    <field name="amount" sum="Total"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Fund Bill Form View -->
+        <record id="view_nn_fund_bill_form" model="ir.ui.view">
+            <field name="name">nn.fund_bill.form</field>
+            <field name="model">nn.fund_bill</field>
+            <field name="arch" type="xml">
+                <form string="Fund Bill">
+                    <header>
+                        <button name="action_post" string="Post Bill" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_cancel" string="Cancel" type="object" invisible="state not in ['draft', 'posted']"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted,cancelled"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="requisition_id" required="1" readonly="state != 'draft'"/>
+                                <field name="amount" required="1" readonly="state != 'draft'"/>
+                            </group>
+                            <group>
+                                <field name="bill_date"/>
+                                <field name="company_id" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Bill Details">
+                                <group>
+                                    <field name="description" nolabel="1" readonly="state != 'draft'"/>
+                                </group>
+                            </page>
+                            <page string="Attachments">
+                                <field name="attachment_ids" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Fund Bill Search View -->
+        <record id="view_nn_fund_bill_search" model="ir.ui.view">
+            <field name="name">nn.fund_bill.search</field>
+            <field name="model">nn.fund_bill</field>
+            <field name="arch" type="xml">
+                <search string="Search Bills">
+                    <field name="name"/>
+                    <field name="requisition_id"/>
+                    <field name="bill_date"/>
+                    <separator/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Posted" name="posted" domain="[('state','=','posted')]"/>
+                    <filter string="Cancelled" name="cancelled" domain="[('state','=','cancelled')]"/>
+                    <separator/>
+                    <filter string="This Month" name="this_month" domain="[('bill_date','&gt;=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-01')), ('bill_date','&lt;=', context_today().strftime('%Y-%m-31'))]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Fund Bill Action -->
+        <record id="action_nn_fund_bill" model="ir.actions.act_window">
+            <field name="name">Fund Bills</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">nn.fund_bill</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

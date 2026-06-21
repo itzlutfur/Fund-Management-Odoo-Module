@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Fund Allocation Tree View -->
+        <record id="view_nn_fund_allocation_tree" model="ir.ui.view">
+            <field name="name">nn.fund_allocation.tree</field>
+            <field name="model">nn.fund_allocation</field>
+            <field name="arch" type="xml">
+                <tree string="Fund Allocations">
+                    <field name="name"/>
+                    <field name="fund_account_id"/>
+                    <field name="amount" sum="Total"/>
+                    <field name="current_approval_level"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Fund Allocation Form View -->
+        <record id="view_nn_fund_allocation_form" model="ir.ui.view">
+            <field name="name">nn.fund_allocation.form</field>
+            <field name="model">nn.fund_allocation</field>
+            <field name="arch" type="xml">
+                <form string="Fund Allocation">
+                    <header>
+                        <button name="action_submit" string="Submit" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_approve_gm" string="Approve (GM)" type="object" class="btn-success" invisible="state != 'submitted'"/>
+                        <button name="action_approve_md" string="Approve (MD)" type="object" class="btn-success" invisible="state != 'gm_approved'"/>
+                        <button name="action_reject" string="Reject" type="object" invisible="state not in ['submitted', 'gm_approved', 'md_approved']"/>
+                        <button name="action_cancel" string="Cancel" type="object" invisible="state not in ['draft', 'submitted', 'gm_approved', 'md_approved']"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,gm_approved,md_approved,approved,rejected"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="fund_account_id" required="1" readonly="state != 'draft'"/>
+                                <field name="amount" required="1" readonly="state != 'draft'"/>
+                            </group>
+                            <group>
+                                <field name="request_date"/>
+                                <field name="requested_by" readonly="1"/>
+                                <field name="current_approval_level" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="project_id" readonly="state != 'draft'"/>
+                            <field name="expense_head_id" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="purpose" nolabel="1" readonly="state != 'draft'"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Fund Allocation Search View -->
+        <record id="view_nn_fund_allocation_search" model="ir.ui.view">
+            <field name="name">nn.fund_allocation.search</field>
+            <field name="model">nn.fund_allocation</field>
+            <field name="arch" type="xml">
+                <search string="Search Fund Allocations">
+                    <field name="name"/>
+                    <field name="fund_account_id"/>
+                    <field name="project_id"/>
+                    <field name="expense_head_id"/>
+                    <separator/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Pending Approval" name="pending" domain="[('state','in',['submitted','gm_approved','md_approved'])]"/>
+                    <filter string="Approved" name="approved" domain="[('state','=','approved')]"/>
+                    <filter string="Rejected" name="rejected" domain="[('state','=','rejected')]"/>
+                    <separator/>
+                    <filter string="Pending GM" name="pending_gm" domain="[('current_approval_level','=','gm_pending')]"/>
+                    <filter string="Pending MD" name="pending_md" domain="[('current_approval_level','=','md_pending')]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Fund Allocation Action -->
+        <record id="action_nn_fund_allocation" model="ir.actions.act_window">
+            <field name="name">Fund Allocations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">nn.fund_allocation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

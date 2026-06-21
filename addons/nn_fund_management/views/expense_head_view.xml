@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Expense Head Tree View -->
+        <record id="view_nn_expense_head_tree" model="ir.ui.view">
+            <field name="name">nn.expense_head.tree</field>
+            <field name="model">nn.expense_head</field>
+            <field name="arch" type="xml">
+                <tree string="Expense Heads">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="company_id"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Expense Head Form View -->
+        <record id="view_nn_expense_head_form" model="ir.ui.view">
+            <field name="name">nn.expense_head.form</field>
+            <field name="model">nn.expense_head</field>
+            <field name="arch" type="xml">
+                <form string="Expense Head">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="1"/>
+                                <field name="code" required="1"/>
+                                <field name="company_id"/>
+                            </group>
+                            <group>
+                                <field name="active"/>
+                                <field name="created_date" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Expense Head Search View -->
+        <record id="view_nn_expense_head_search" model="ir.ui.view">
+            <field name="name">nn.expense_head.search</field>
+            <field name="model">nn.expense_head</field>
+            <field name="arch" type="xml">
+                <search string="Search Expense Heads">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="company_id"/>
+                    <separator/>
+                    <filter string="Active" name="active" domain="[('active','=',True)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Expense Head Action -->
+        <record id="action_nn_expense_head" model="ir.actions.act_window">
+            <field name="name">Expense Heads</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">nn.expense_head</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

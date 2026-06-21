@@ -7,7 +7,7 @@ class NNFundApproverConfig(models.Model):
     _name = 'nn.fund_approver_config'
     _description = 'Fund Approver Configuration'
 
-    company_id = fields.Many2one('res.company', string='Company', required=True, unique=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True)
     
     # GM Approver
     gm_user_id = fields.Many2one('res.users', string='General Manager (User)')
@@ -18,6 +18,10 @@ class NNFundApproverConfig(models.Model):
     md_group_id = fields.Many2one('res.groups', string='Managing Director (Group)')
     
     can_self_approve = fields.Boolean(string='Allow Self-Approval', default=False)
+
+    _sql_constraints = [
+        ('unique_company', 'UNIQUE(company_id)', 'Approver configuration must be unique per company!'),
+    ]
 
     @api.constrains('gm_user_id', 'gm_group_id')
     def _check_gm_config(self):
