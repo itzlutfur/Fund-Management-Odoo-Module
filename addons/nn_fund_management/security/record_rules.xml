@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <function model="ir.model.data" name="write">
+            <function model="ir.model.data" name="search">
+                <value eval="[
+                    ('module', '=', 'nn_fund_management'),
+                    ('model', '=', 'ir.rule'),
+                    ('name', 'like', 'rule_nn_%')
+                ]"/>
+            </function>
+            <value eval="{'noupdate': False}"/>
+        </function>
+
+        <!-- Company isolation for all company-owned fund records. -->
+        <record id="rule_nn_fund_account_company" model="ir.rule">
+            <field name="name">Fund Account: allowed companies</field>
+            <field name="model_id" ref="model_nn_fund_account"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <record id="rule_nn_incoming_fund_company" model="ir.rule">
+            <field name="name">Incoming Fund: allowed companies</field>
+            <field name="model_id" ref="model_nn_incoming_fund"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <record id="rule_nn_expense_head_company" model="ir.rule">
+            <field name="name">Expense Head: allowed companies</field>
+            <field name="model_id" ref="model_nn_expense_head"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <record id="rule_nn_fund_balance_company" model="ir.rule">
+            <field name="name">Fund Balance: allowed companies</field>
+            <field name="model_id" ref="model_nn_fund_balance"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <record id="rule_nn_fund_allocation_company" model="ir.rule">
+            <field name="name">Fund Allocation: allowed companies</field>
+            <field name="model_id" ref="model_nn_fund_allocation"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <record id="rule_nn_fund_requisition_company" model="ir.rule">
+            <field name="name">Fund Requisition: allowed companies</field>
+            <field name="model_id" ref="model_nn_fund_requisition"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <record id="rule_nn_fund_bill_company" model="ir.rule">
+            <field name="name">Fund Bill: allowed companies</field>
+            <field name="model_id" ref="model_nn_fund_bill"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <record id="rule_nn_fund_transfer_company" model="ir.rule">
+            <field name="name">Fund Transfer: allowed companies</field>
+            <field name="model_id" ref="model_nn_fund_transfer"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <record id="rule_nn_approval_history_company" model="ir.rule">
+            <field name="name">Approval History: allowed companies</field>
+            <field name="model_id" ref="model_nn_approval_history"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <record id="rule_nn_fund_approver_config_company" model="ir.rule">
+            <field name="name">Fund Approver Config: allowed companies</field>
+            <field name="model_id" ref="model_nn_fund_approver_config"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <record id="rule_nn_fund_approval_rule_company" model="ir.rule">
+            <field name="name">Fund Approval Rule: allowed companies</field>
+            <field name="model_id" ref="model_nn_fund_approval_rule"/>
+            <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        </record>
+
+        <!-- Regular fund users only see their own request records. -->
+        <record id="rule_nn_fund_allocation_own_requests" model="ir.rule">
+            <field name="name">Fund Allocation: own requests</field>
+            <field name="model_id" ref="model_nn_fund_allocation"/>
+            <field name="domain_force">[('requested_by', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_nn_fund_user'))]"/>
+        </record>
+
+        <record id="rule_nn_fund_requisition_own_requests" model="ir.rule">
+            <field name="name">Fund Requisition: own requests</field>
+            <field name="model_id" ref="model_nn_fund_requisition"/>
+            <field name="domain_force">[('requested_by', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_nn_fund_user'))]"/>
+        </record>
+
+        <record id="rule_nn_fund_transfer_own_requests" model="ir.rule">
+            <field name="name">Fund Transfer: own requests</field>
+            <field name="model_id" ref="model_nn_fund_transfer"/>
+            <field name="domain_force">[('requested_by', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_nn_fund_user'))]"/>
+        </record>
+
+        <record id="rule_nn_fund_bill_own_requisitions" model="ir.rule">
+            <field name="name">Fund Bill: own requisitions</field>
+            <field name="model_id" ref="model_nn_fund_bill"/>
+            <field name="domain_force">[('requisition_id.requested_by', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_nn_fund_user'))]"/>
+        </record>
+
+        <record id="rule_nn_approval_history_own_requests" model="ir.rule">
+            <field name="name">Approval History: own requests</field>
+            <field name="model_id" ref="model_nn_approval_history"/>
+            <field name="domain_force">[
+                '|', '|',
+                ('allocation_id.requested_by', '=', user.id),
+                ('requisition_id.requested_by', '=', user.id),
+                ('transfer_id.requested_by', '=', user.id)
+            ]</field>
+            <field name="groups" eval="[(4, ref('group_nn_fund_user'))]"/>
+        </record>
+
+        <!-- Finance, approver, and administrator roles can review all in-company request records. -->
+        <record id="rule_nn_fund_allocation_elevated_all" model="ir.rule">
+            <field name="name">Fund Allocation: elevated company review</field>
+            <field name="model_id" ref="model_nn_fund_allocation"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[
+                (4, ref('group_nn_finance_user')),
+                (4, ref('group_nn_gm_approver')),
+                (4, ref('group_nn_md_approver')),
+                (4, ref('group_nn_fund_admin'))
+            ]"/>
+        </record>
+
+        <record id="rule_nn_fund_requisition_elevated_all" model="ir.rule">
+            <field name="name">Fund Requisition: elevated company review</field>
+            <field name="model_id" ref="model_nn_fund_requisition"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[
+                (4, ref('group_nn_finance_user')),
+                (4, ref('group_nn_gm_approver')),
+                (4, ref('group_nn_md_approver')),
+                (4, ref('group_nn_fund_admin'))
+            ]"/>
+        </record>
+
+        <record id="rule_nn_fund_transfer_elevated_all" model="ir.rule">
+            <field name="name">Fund Transfer: elevated company review</field>
+            <field name="model_id" ref="model_nn_fund_transfer"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[
+                (4, ref('group_nn_finance_user')),
+                (4, ref('group_nn_gm_approver')),
+                (4, ref('group_nn_md_approver')),
+                (4, ref('group_nn_fund_admin'))
+            ]"/>
+        </record>
+
+        <record id="rule_nn_fund_bill_elevated_all" model="ir.rule">
+            <field name="name">Fund Bill: elevated company review</field>
+            <field name="model_id" ref="model_nn_fund_bill"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[
+                (4, ref('group_nn_finance_user')),
+                (4, ref('group_nn_gm_approver')),
+                (4, ref('group_nn_md_approver')),
+                (4, ref('group_nn_fund_admin'))
+            ]"/>
+        </record>
+
+        <record id="rule_nn_approval_history_elevated_all" model="ir.rule">
+            <field name="name">Approval History: elevated company review</field>
+            <field name="model_id" ref="model_nn_approval_history"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[
+                (4, ref('group_nn_finance_user')),
+                (4, ref('group_nn_gm_approver')),
+                (4, ref('group_nn_md_approver')),
+                (4, ref('group_nn_fund_admin'))
+            ]"/>
+        </record>
+
+    </data>
+</odoo>

@@ -22,6 +22,11 @@
     """,
     # data files always loaded at installation
     'data': [
+        # Security
+        'security/groups.xml',
+        'security/ir.model.access.csv',
+        'security/record_rules.xml',
+
         # Views
         'views/fund_account_view.xml',
         'views/incoming_fund_view.xml',
